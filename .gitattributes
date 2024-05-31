@@ -1,2 +1,209 @@
-# Auto detect text files and perform LF normalization
-* text=auto
+import pygame
+import sys
+import math
+
+pygame.init()
+
+WIDTH, HEIGHT = 600, 600
+WINDOW_SIZE = (WIDTH, HEIGHT)
+RADIUS = 150
+NUM_SIDES = 15
+BLUE = (0, 0, 255)
+BLACK = (0, 0, 0)
+LINE_WIDTH = 6
+YELLOW = (255, 255, 0)
+
+def draw_pentadecagon(window):
+    side_length = 2 * RADIUS * math.cos(math.pi / NUM_SIDES)
+    angle = (2 * math.pi) / NUM_SIDES
+
+    points = []
+    for i in range(NUM_SIDES):
+        x = WIDTH // 2 + RADIUS * math.cos(i * angle)
+        y = HEIGHT // 2 + RADIUS * math.sin(i * angle)
+        points.append((x, y))
+
+    pygame.draw.polygon(window, BLUE, points, 0)
+    pygame.draw.polygon(window, BLACK, points, LINE_WIDTH)
+
+def draw_rotated_pentadecagon(window, angle_offset, scale):
+    side_length = 2 * RADIUS * scale * math.cos(math.pi / NUM_SIDES)
+    angle = (2 * math.pi) / NUM_SIDES
+
+    points = []
+    for i in range(NUM_SIDES):
+        x = WIDTH // 2 + RADIUS * scale * math.cos(i * angle + math.radians(angle_offset))
+        y = HEIGHT // 2 + RADIUS * scale * math.sin(i * angle + math.radians(angle_offset))
+        points.append((x, y))
+
+    pygame.draw.polygon(window, BLUE, points, 0)
+    pygame.draw.polygon(window, BLACK, points, LINE_WIDTH)
+
+def draw_scaled_pentadecagon(window, scale):
+    side_length = 2 * RADIUS * scale * math.cos(math.pi / NUM_SIDES)
+    angle = (2 * math.pi) / NUM_SIDES
+
+    points = []
+    for i in range(NUM_SIDES):
+        x = WIDTH // 2 + RADIUS * scale * math.cos(i * angle)
+        y = HEIGHT // 2 + RADIUS * scale * math.sin(i * angle)
+        points.append((x, y))
+
+    pygame.draw.polygon(window, BLUE, points, 0)
+    pygame.draw.polygon(window, BLACK, points, LINE_WIDTH)
+
+def draw_adjusted_pentadecagon(window):
+    side_length = 2 * RADIUS * math.cos(math.pi / NUM_SIDES)
+    angle = (2 * math.pi) / NUM_SIDES
+
+    points = []
+    for i in range(NUM_SIDES):
+        if i == 0 or i == 4:
+            x = WIDTH // 2 + (RADIUS * math.cos(i * angle)) - (RADIUS * 0.25)
+            y = HEIGHT // 2 + (RADIUS * math.sin(i * angle)) - (RADIUS * 0.25)
+        else:
+            x = WIDTH // 2 + RADIUS * math.cos(i * angle)
+            y = HEIGHT // 2 + RADIUS * math.sin(i * angle)
+
+        points.append((x, y))
+
+    pygame.draw.polygon(window, BLUE, points, 0)
+    pygame.draw.polygon(window, BLACK, points, LINE_WIDTH)
+
+def draw_wide_pentadecagon(window):
+    scale = 0.75
+    angle_offset = 45
+    side_length = 4 * RADIUS * scale * math.cos(math.pi / NUM_SIDES)
+    angle = (2 * math.pi) / NUM_SIDES
+
+    points = []
+    for i in range(NUM_SIDES):
+        x = WIDTH // 2 + 2 * RADIUS * scale * math.cos(i * angle + math.radians(-angle_offset))
+        y = RADIUS * scale + RADIUS * scale * math.sin(i * angle + math.radians(-angle_offset)) + 10
+        points.append((x, y))
+
+    pygame.draw.polygon(window, BLUE, points, 0)
+    pygame.draw.polygon(window, BLACK, points, LINE_WIDTH)
+
+def draw_sixth_shape(window):
+    side_length = 2 * RADIUS * math.cos(math.pi / NUM_SIDES)
+    angle = (2 * math.pi) / NUM_SIDES
+
+    points = []
+    for i in range(NUM_SIDES):
+        if i == 0 or i == 4:
+            x = WIDTH // 2 + (RADIUS * math.cos(i * angle)) - (RADIUS * 0.25)
+            y = HEIGHT // 2 + (RADIUS * math.sin(i * angle)) - (RADIUS * 0.25)
+        else:
+            x = WIDTH // 2 + RADIUS * math.cos(i * angle)
+            y = HEIGHT // 2 + RADIUS * math.sin(i * angle)
+
+        points.append((x, y))
+
+    rotation_angle = math.radians(90)
+    rotated_points = []
+    for point in points:
+        x_rotated = WIDTH // 2 + (point[0] - WIDTH // 2) * math.cos(rotation_angle) - (point[1] - HEIGHT // 2) * math.sin(rotation_angle)
+        y_rotated = HEIGHT // 2 + (point[0] - WIDTH // 2) * math.sin(rotation_angle) + (point[1] - HEIGHT // 2) * math.cos(rotation_angle)
+        rotated_points.append((x_rotated, y_rotated))
+
+    pygame.draw.polygon(window, BLUE, rotated_points, 0)
+    pygame.draw.polygon(window, BLACK, rotated_points, LINE_WIDTH)
+
+def draw_seventh_shape(window):
+    scale = 1.0625
+    angle = (2 * math.pi) / NUM_SIDES
+
+    points = []
+    for i in range(NUM_SIDES):
+        x = WIDTH // 2 - RADIUS * scale * math.cos(i * angle)
+        y = HEIGHT // 2 + RADIUS * scale * math.sin(i * angle)
+        points.append((x, y))
+
+    pygame.draw.polygon(window, BLUE, points, 0)
+    pygame.draw.polygon(window, BLACK, points, LINE_WIDTH)
+
+def draw_eighth_shape(window):
+    scale = 0.75
+    rotation_angle = math.radians(45)
+    side_length = 4 * RADIUS * scale * math.cos(math.pi / NUM_SIDES)
+    angle = (2 * math.pi) / NUM_SIDES
+
+    points = []
+    for i in range(NUM_SIDES):
+        x_before = WIDTH // 2 + 2 * RADIUS * scale * math.cos(angle * i)
+        y_before = RADIUS * scale + RADIUS * scale * math.sin(angle * i) + 300
+
+        x = WIDTH // 2 + (x_before - WIDTH // 2) * math.cos(rotation_angle) - (y_before - RADIUS * scale) * math.sin(rotation_angle)
+        y = RADIUS * scale + (x_before - WIDTH // 2) * math.sin(rotation_angle) + (y_before - RADIUS * scale) * math.cos(rotation_angle)
+
+        points.append((x, y))
+
+    center_x = sum(point[0] for point in points) / len(points)
+    x_adjustment = WIDTH // 2 + 10 - center_x
+    points = [(x + x_adjustment, y) for x, y in points]
+
+    pygame.draw.polygon(window, BLUE, points, 0)
+    pygame.draw.polygon(window, BLACK, points, LINE_WIDTH)
+
+def draw_ninth_shape(window):
+    side_length = 2 * RADIUS * math.cos(math.pi / NUM_SIDES)
+    angle = (2 * math.pi) / NUM_SIDES
+
+    points = []
+    for i in range(NUM_SIDES):
+        if i == 0 or i == 4:
+            x = WIDTH // 2 + (RADIUS * math.cos(i * angle)) + (RADIUS * 0.25)
+            y = HEIGHT // 2 + (RADIUS * math.sin(i * angle)) + (RADIUS * 0.25)
+        else:
+            x = WIDTH // 2 + RADIUS * math.cos(i * angle)
+            y = HEIGHT // 2 + RADIUS * math.sin(i * angle)
+
+        points.append((x, y))
+
+    points.reverse()
+
+    pygame.draw.polygon(window, BLUE, points, 0)
+    pygame.draw.polygon(window, BLACK, points, LINE_WIDTH)
+
+def main():
+    window = pygame.display.set_mode(WINDOW_SIZE)
+    pygame.display.set_caption("Drawing Shapes")
+
+    current_shape = None
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+        window.fill(YELLOW)
+
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_1]:
+            current_shape = lambda: draw_pentadecagon(window)
+        elif keys[pygame.K_2]:
+            current_shape = lambda: draw_rotated_pentadecagon(window, 45, 1.5)
+        elif keys[pygame.K_3]:
+            current_shape = lambda: draw_scaled_pentadecagon(window, 1.0625)
+        elif keys[pygame.K_4]:
+            current_shape = lambda: draw_adjusted_pentadecagon(window)
+        elif keys[pygame.K_5]:
+            current_shape = lambda: draw_wide_pentadecagon(window)
+        elif keys[pygame.K_6]:
+            current_shape = lambda: draw_sixth_shape(window)
+        elif keys[pygame.K_7]:
+            current_shape = lambda: draw_seventh_shape(window)
+        elif keys[pygame.K_8]:
+            current_shape = lambda: draw_eighth_shape(window)
+        elif keys[pygame.K_9]:
+            current_shape = lambda: draw_ninth_shape(window)
+
+        if current_shape:
+            current_shape()
+
+        pygame.display.flip()
+
+if __name__ == "__main__":
+    main()
